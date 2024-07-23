@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet, Text, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import logo from '@/assets/images/logo.webp';
+import Model from '@/components/Model'
+import LoginForm from '@/components/login';
  
-const LoginForm = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
   const handleLogin = () => {
-    if (email === '' || password === '') {
+    if (email === 'test' || password === 'aryan') {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
@@ -23,26 +25,13 @@ const LoginForm = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logo2}>
       <Image source={logo} style={styles.logo1} />
-      </View>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Pressable onPress={handleLogin}>
+      <Text style={styles.title}>EZ Checkout</Text>
+      {/* <Pressable onPress={handleLogin}>
         <Text style={styles.top}>Login</Text>
-      </Pressable>
+      </Pressable> */}
+      <LoginForm />
+      <Model />
     </View>
   );
 };
@@ -52,13 +41,9 @@ const styles = StyleSheet.create({
   logo1: {
     height: 600,
     width: 500,
-    borderRadius: 250,
+    borderRadius: 300,
+    bottom: 130,
   }, 
-
-  logo2: {
-    marginBottom: 50,
-    
-  },
 
   container: {
     flex: 1,
@@ -66,7 +51,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems:'center',
     backgroundColor:'ghostwhite',
-    marginBottom: 200,
+
 
   },
 
@@ -78,19 +63,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     borderRadius: 10,
+    bottom: 100,
 
   },
 
-  top:{
-    marginTop:20,
-    fontSize:20,
-  }, 
   title: {
     fontSize: 50,
     textAlign: 'center',
-    marginBottom:10,
-    
+    bottom: 110,
   },
+  
 });
  
-export default LoginForm;
+export default Login;
+
