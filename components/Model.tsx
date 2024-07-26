@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button, Modal } from 'react-native'
 import React, {useState} from 'react'
-import SignUp from './SignUp';
+import SignUp from './signup';
 
 const Model = () => {
     const [IsModelVisible, setModelVisible] = useState(false)
@@ -10,7 +10,7 @@ const Model = () => {
     };
   return (
     <View style={styles.container}>
-      <Text style={styles.content2}>OR</Text>
+      <Text style={styles.content2}>Don't have an account?</Text>
       <Button title="Sign Up" onPress={toggelModel}></Button>
       <View style={styles.content}>
         <Modal visible={IsModelVisible} animationType="fade">
@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
     },
 
     content2:{
+      bottom: 20,
     }
 })
