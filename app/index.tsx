@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Alert, StyleSheet, Text, Pressable, Image } from 'react-native';
+import { View, TextInput, Alert, StyleSheet, Text, Pressable, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import logo from '@/assets/images/logo.webp';
 
@@ -22,7 +22,10 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <Image source={logo} style={styles.logo1} />
       <Text style={styles.title}>EZ Checkout</Text>
       <Text style={styles.title1}>SIGN-IN</Text>
@@ -44,11 +47,11 @@ const Login = () => {
       </Pressable>
       <Text style={styles.signupText}>
         Don't have an account?{' '}
-        <Text style={styles.signupLink} onPress={() => router.push('Model')}>
+        <Text style={styles.signupLink} onPress={() => router.push('/navigation/SignUp')}>
           SignUp
         </Text>
       </Text>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

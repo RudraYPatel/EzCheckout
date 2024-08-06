@@ -1,21 +1,7 @@
-// import { StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-
-// const  index = () => {
-//   return (
-//     <View>
-//       <Text>jjuhhhghbhu</Text>
-//     </View>
-//   )
-// }
-
-// export default index
-
-// const styles = StyleSheet.create({})
-
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import discount1 from '@/assets/images/discount1.webp';
 import discount2 from '@/assets/images/discount2.webp';
 import rcs from '@/assets/images/rcs.jpg';
@@ -24,10 +10,23 @@ import safeway from '@/assets/images/safeway.png';
 import freshco from '@/assets/images/freshco.png';
 
 const HomeScreen = () => {
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    Alert.alert('Sign Out', 'You have been signed out.');
+  };
+
+  const handleRcsPress = () => {
+    router.push('../components/Rcs'); // Adjust the path according to your routing setup
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
       <View style={styles.header}>
+        <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+          <Feather name="log-out" size={24} color="black" />
+        </TouchableOpacity>
         <Feather name="shopping-cart" size={24} color="black" />
       </View>
 
@@ -41,18 +40,18 @@ const HomeScreen = () => {
 
       {/* Promotional Banners */}
       <View>
-      <Image source={discount1} style={styles.discount1} />
-      <Image source={discount2} style={styles.discount2} />
+        <Image source={discount1} style={styles.discount1} />
+        <Image source={discount2} style={styles.discount2} />
       </View>
 
       {/* Store List */}
       <View style={styles.storeContainer}>
         <Text style={styles.storeTitle}>Shop by store</Text>
         <View style={styles.storeList}>
-          <View style={styles.storeItem}>
+          <TouchableOpacity style={styles.storeItem} onPress={handleRcsPress}>
             <Image source={rcs} style={styles.storeImage} />
             <Text style={styles.storeName}>Real Canadian Superstore</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.storeItem}>
             <Image source={walmart} style={styles.storeImage} />
             <Text style={styles.storeName}>Walmart</Text>
@@ -85,6 +84,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    marginRight: 10,
+  },
+  signOutButton: {
     marginRight: 10,
   },
   searchContainer: {
@@ -141,20 +143,20 @@ const styles = StyleSheet.create({
   discount1: {
     height: 189,
     width: 350,
-    borderRadius:10,
+    borderRadius: 10,
   },
   discount2: {
     height: 189,
     width: 350,
-    borderRadius:10,
-    marginTop:10,
-    shadowColor:'black',
+    borderRadius: 10,
+    marginTop: 10,
+    shadowColor: 'black',
   },
   storeTitle: {
     fontWeight: 'bold',
     fontSize: 30,
     marginBottom: 10,
-    marginTop:10,
+    marginTop: 10,
   },
   storeList: {
     flexDirection: 'row',
@@ -173,7 +175,5 @@ const styles = StyleSheet.create({
   },
   storeName: {
     textAlign: 'center',
-  
   },
 });
-
