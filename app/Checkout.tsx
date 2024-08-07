@@ -1,60 +1,60 @@
 import React, { useState } from 'react';
-import { View, TextInput, Alert, StyleSheet, Text, Pressable, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Alert, StyleSheet, Text, Pressable, Image, FlatList, KeyboardAvoidingView, Platform, Button } from 'react-native';
 import logo from '@/assets/images/logo.webp';
+import { useSearchParams } from 'expo-router';
 
-const PaymentSetup = () => {
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [cardHolderName, setCardHolderName] = useState('');
+const CheckOut = () => {
+  const { cart: cartString } = useSearchParams();
+  const initialCart = JSON.parse(cartString);
 
-  const handlePayment = () => {
-    if (cardNumber === '' || expiryDate === '' || cvv === '' || cardHolderName === '') {
-      Alert.alert('Error', 'Please fill in all fields.');
-      return;
-    }
+  const [cart, setCart] = useState(initialCart);
 
-    Alert.alert('Success', 'Payment processed successfully.');
+  const handleQuantityChange = (id, amount) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id ? { ...item, quantity: Math.max(item.quantity + amount, 0) } : item
+      )
+    );
   };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.productContainer}>
+      <Image source={item.image} style={styles.productImage} />
+      <View style={styles.productDetails}>
+        <Text style={styles.productName}>{item.name}</Text>
+        <Text style={styles.productPrice}>${item.price.toFixed(2)} x {item.quantity}</Text>
+        <Text style={styles.totalPrice}>Total: ${(item.price * item.quantity).toFixed(2)}</Text>
+      </View>
+      <View style={styles.quantityContainer}>
+        <Pressable onPress={() => handleQuantityChange(item.id, -1)} style={styles.quantityButton}>
+          <Text style={styles.quantityButtonText}>-</Text>
+        </Pressable>
+        <Text style={styles.quantityText}>{item.quantity}</Text>
+        <Pressable onPress={() => handleQuantityChange(item.id, 1)} style={styles.quantityButton}>
+          <Text style={styles.quantityButtonText}>+</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <FlatList
+        data={cart}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+      />
+      <Text style={styles.totalAmount}>Total Amount: ${totalAmount.toFixed(2)}</Text>
       <Image source={logo} style={styles.logo1} />
       <Text style={styles.title}>EZ Checkout</Text>
-      <Text style={styles.title1}>Payment Set-up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Card Number"
-        value={cardNumber}
-        onChangeText={setCardNumber}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Expiry Date"
-        value={expiryDate}
-        onChangeText={setExpiryDate}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="CVV"
-        value={cvv}
-        onChangeText={setCvv}
-        keyboardType="numeric"
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Name on Card"
-        value={cardHolderName}
-        onChangeText={setCardHolderName}
-      />
-      <Pressable onPress={handlePayment} style={styles.payButton}>
-        <Text style={styles.payButtonText}>Pay Now</Text>
+      <Pressable onPress={() => Alert.alert('Proceed to Payment')} style={styles.payButton}>
+        <Text style={styles.payButtonText}>Proceed to Payment</Text>
       </Pressable>
     </KeyboardAvoidingView>
   );
@@ -68,37 +68,69 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  input: {
-    height: 50,
-    width: '80%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    bottom: 120,
+  list: {
+    justifyContent: 'center',
   },
-  payButton: {
-    backgroundColor: 'green',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 20,
-    bottom: 110,
+  productContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#f8f8f8',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    alignItems: 'center',
   },
-  payButtonText: {
-    color: 'white',
+  productImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  productDetails: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  productName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    marginBottom: 5,
+  },
+  productPrice: {
     fontSize: 16,
+    color: '#555',
+    marginBottom: 10,
   },
-  title1: {
-    fontSize: 24,
-    marginBottom: 20,
-    bottom: 120,
+  totalPrice: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: 'bold',
   },
-  title: {
-    fontSize: 50,
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quantityButton: {
+    backgroundColor: '#007B55',
+    borderRadius: 5,
+    padding: 5,
+    marginHorizontal: 5,
+  },
+  quantityButtonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  quantityText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    marginHorizontal: 10,
+  },
+  totalAmount: {
+    fontSize: 20,
+    color: '#000',
+    fontWeight: 'bold',
     textAlign: 'center',
-    bottom: 140,
+    marginTop: 20,
   },
   logo1: {
     height: 600,
@@ -107,6 +139,23 @@ const styles = StyleSheet.create({
     bottom: 160,
     opacity: 0.8,
   },
+  title: {
+    fontSize: 50,
+    textAlign: 'center',
+    bottom: 140,
+  },
+  payButton: {
+    backgroundColor: '#007B55',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  payButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
-export default PaymentSetup;
+export default CheckOut;

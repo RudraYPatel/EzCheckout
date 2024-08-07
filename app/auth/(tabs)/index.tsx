@@ -1,4 +1,4 @@
-  import React from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -25,10 +25,10 @@ const Index = () => {
   };
 
   const handleSafewayPress = () => {
-    router.push('/Walmart');
+    router.push('/Safeway');
   };
 
-  const handleFreshcoPress = () => {
+  const handleFreshCoPress = () => {
     router.push('/FreshCo');
   };
 
@@ -72,7 +72,7 @@ const Index = () => {
             <Image source={safeway} style={styles.storeImage} />
             <Text style={styles.storeName}>Safeway</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.storeItem} onPress={handleFreshcoPress}>
+          <TouchableOpacity style={styles.storeItem} onPress={handleFreshCoPress}>
             <Image source={freshco} style={styles.storeImage} />
             <Text style={styles.storeName}>Fresh Co</Text>
           </TouchableOpacity>
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     marginRight: 10,
+    marginTop: 50,
   },
   signOutButton: {
     marginRight: 10,
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 40,
-    borderColor: '#ccc',
+    borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 10,
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   exploreText: {
-    color: '#fff',
+    color: 'black',
     fontWeight: 'bold',
   },
   bannerContainer: {
