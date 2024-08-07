@@ -19,7 +19,7 @@ const Checkout = () => {
 
   const handlePayment = () => {
     // Implement payment processing logic here
-    alert('Payment processed successfully!');
+    router.push('/Payment')
   };
 
   const renderItem = ({ item }) => (

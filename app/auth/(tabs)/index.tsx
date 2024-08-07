@@ -13,7 +13,7 @@ const Index = () => {
   const router = useRouter();
 
   const handleSignOut = () => {
-    Alert.alert('Sign Out', 'You have been signed out.');
+    router.push('/')
   };
 
   const handleRcsPress = () => {

@@ -17,7 +17,7 @@ const Payment = () => {
     }
 
     Alert.alert('Success', 'Payment processed successfully.');
-    router.push('/thanks'); 
+    router.push('/Thanks'); 
   };
 
   return (
