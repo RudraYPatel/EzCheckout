@@ -40,7 +40,7 @@ const Safeway = () => {
         <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
           <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={styles.title}> Safeway</Text>
+        <Text style={styles.title}></Text>
       </View>
       <FlatList
         data={products}

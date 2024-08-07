@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   storeImage: {
-    width: 60,
+    width: 90,
     height: 60,
     marginRight: 10,
   },
