@@ -2,7 +2,7 @@
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 const products = [
   { id: '1', name: 'Apples', price: 3.99, image: require('@/assets/images/apples.avif'), description: 'Fresh and juicy apples. These apples are organic and weigh approximately 1 lb each. Perfect for snacking or baking.', details: 'Weight: 1 lb, Quantity: 5, Organic: Yes' },
@@ -18,7 +18,7 @@ const products = [
 ];
 
 const Safeway = () => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [cart, setCart] = useState([]);
   const [quantities, setQuantities] = useState(products.reduce((acc, product) => {
     acc[product.id] = 0;
@@ -26,7 +26,7 @@ const Safeway = () => {
   }, {}));
 
   const handleBackPress = () => {
-    navigation.goBack();
+    router.back();
   };
 
   const handleQuantityChange = (id, amount) => {
@@ -42,7 +42,7 @@ const Safeway = () => {
       quantity: quantities[product.id],
     }));
     setCart(cartItems);
-    navigation.navigate('CheckOut', { cart: JSON.stringify(cartItems) });
+    router.push({ pathname: '/Checkout', params: { cart: JSON.stringify(cartItems) } });
   };
 
   const renderItem = ({ item }) => (

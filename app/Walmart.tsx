@@ -1,8 +1,8 @@
 "use client"
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 const products = [
   { id: '1', name: 'Apples', price: 3.99, image: require('@/assets/images/apples.avif'), description: 'Fresh and juicy apples. These apples are organic and weigh approximately 1 lb each. Perfect for snacking or baking.', details: 'Weight: 1 lb, Quantity: 5, Organic: Yes' },
@@ -18,37 +18,44 @@ const products = [
 ];
 
 const Walmart = () => {
-  const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
   const [cart, setCart] = useState([]);
+  const [quantities, setQuantities] = useState(products.reduce((acc, product) => {
+    acc[product.id] = 0;
+    return acc;
+  }, {}));
 
   const handleBackPress = () => {
-    navigation.goBack();
+    router.back();
   };
 
-  const handleImagePress = (product) => {
-    setSelectedProduct(product);
-    setModalVisible(true);
+  const handleQuantityChange = (id, amount) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [id]: Math.max(prevQuantities[id] + amount, 0),
+    }));
   };
 
-  const handleAddToCart = () => {
-    const newCart = [...cart, { ...selectedProduct, quantity }];
-    setCart(newCart);
-    setModalVisible(false);
-    setQuantity(1);
-    navigation.navigate('CheckOut', { cart: newCart });
+  const handleCheckout = () => {
+    const cartItems = products.filter((product) => quantities[product.id] > 0).map((product) => ({
+      ...product,
+      quantity: quantities[product.id],
+    }));
+    setCart(cartItems);
+    router.push({ pathname: '/Checkout', params: { cart: JSON.stringify(cartItems) } });
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleImagePress(item)}>
-      <View style={styles.productContainer}>
-        <Image source={item.image} style={styles.productImage} />
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+    <View style={styles.productContainer}>
+      <Image source={item.image} style={styles.productImage} />
+      <Text style={styles.productName}>{item.name}</Text>
+      <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+      <View style={styles.quantityContainer}>
+        <Button title="-" onPress={() => handleQuantityChange(item.id, -1)} />
+        <Text style={styles.quantityText}>{quantities[item.id]}</Text>
+        <Button title="+" onPress={() => handleQuantityChange(item.id, 1)} />
       </View>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -67,44 +74,9 @@ const Walmart = () => {
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.list}
       />
-      {selectedProduct && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-            setQuantity(1);
-          }}
-        >
-          <View style={styles.modalView}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => {
-                setModalVisible(false);
-                setQuantity(1);
-              }}
-            >
-              <Feather name="x" size={24} color="white" />
-            </TouchableOpacity>
-            <View style={styles.modalContent}>
-              <Image source={selectedProduct.image} style={styles.modalImage} />
-              <Text style={styles.modalTitle}>{selectedProduct.name}</Text>
-              <Text style={styles.modalPrice}>${selectedProduct.price.toFixed(2)}</Text>
-              <Text style={styles.modalDescription}>{selectedProduct.description}</Text>
-              <Text style={styles.modalDetails}>{selectedProduct.details}</Text>
-              <View style={styles.quantityContainer}>
-                <Button title="-" onPress={() => setQuantity(quantity > 1 ? quantity - 1 : 1)} />
-                <Text style={styles.quantityText}>{quantity}</Text>
-                <Button title="+" onPress={() => setQuantity(quantity + 1)} />
-              </View>
-              <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-                <Text style={styles.addToCartText}>Add to Cart</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      )}
+      <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+        <Text style={styles.checkoutText}>Proceed to Checkout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -165,67 +137,6 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: 10,
   },
-  addToCartButton: {
-    backgroundColor: '#007B55',
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  addToCartText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 20,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 50,
-    right: 50,
-    zIndex: 1,
-    backgroundColor: 'black',
-    borderRadius: 15,
-    padding: 10,
-  },
-  modalContent: {
-    backgroundColor: 'black',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: 'white',
-  },
-  modalPrice: {
-    fontSize: 20,
-    color: 'white',
-    marginBottom: 10,
-  },
-  modalDescription: {
-    fontSize: 16,
-    color: 'white',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  modalDetails: {
-    fontSize: 16,
-    color: 'white',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -237,6 +148,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
-    marginHorizontal: 10,
-  },
+    marginHorizontal: 10,
+  },
+  checkoutButton: {
+    backgroundColor: '#007B55',
+    borderRadius: 5,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  checkoutText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
 });

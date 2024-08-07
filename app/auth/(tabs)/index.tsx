@@ -29,7 +29,7 @@ const Index = () => {
   };
 
   const handleFreshCoPress = () => {
-    router.push('/FreshCo');
+    router.push('/Freshco');
   };
 
   return (
