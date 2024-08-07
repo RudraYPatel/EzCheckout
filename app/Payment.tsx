@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, TextInput, Alert, StyleSheet, Text, Pressable, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
 import logo from '@/assets/images/logo.webp';
 
-const PaymentSetup = () => {
+const Payment = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [cardHolderName, setCardHolderName] = useState('');
+  const router = useRouter();
 
   const handlePayment = () => {
     if (cardNumber === '' || expiryDate === '' || cvv === '' || cardHolderName === '') {
@@ -15,6 +17,7 @@ const PaymentSetup = () => {
     }
 
     Alert.alert('Success', 'Payment processed successfully.');
+    router.push('/thanks'); 
   };
 
   return (
@@ -109,4 +112,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PaymentSetup;
+export default Payment;
