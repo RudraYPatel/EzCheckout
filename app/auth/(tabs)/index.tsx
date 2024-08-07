@@ -1,4 +1,4 @@
-import React from 'react';
+  import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -9,7 +9,7 @@ import walmart from '@/assets/images/walmart.jpg';
 import safeway from '@/assets/images/safeway.png';
 import freshco from '@/assets/images/freshco.png';
 
-const HomeScreen = () => {
+const Index = () => {
   const router = useRouter();
 
   const handleSignOut = () => {
@@ -17,7 +17,19 @@ const HomeScreen = () => {
   };
 
   const handleRcsPress = () => {
-    router.push('../components/Rcs'); // Adjust the path according to your routing setup
+    router.push('/Rcs');
+  };
+
+  const handleWalmartPress = () => {
+    router.push('/Walmart');
+  };
+
+  const handleSafewayPress = () => {
+    router.push('/Walmart');
+  };
+
+  const handleFreshcoPress = () => {
+    router.push('/FreshCo');
   };
 
   return (
@@ -52,25 +64,25 @@ const HomeScreen = () => {
             <Image source={rcs} style={styles.storeImage} />
             <Text style={styles.storeName}>Real Canadian Superstore</Text>
           </TouchableOpacity>
-          <View style={styles.storeItem}>
+          <TouchableOpacity style={styles.storeItem} onPress={handleWalmartPress}>
             <Image source={walmart} style={styles.storeImage} />
             <Text style={styles.storeName}>Walmart</Text>
-          </View>
-          <View style={styles.storeItem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.storeItem} onPress={handleSafewayPress}>
             <Image source={safeway} style={styles.storeImage} />
             <Text style={styles.storeName}>Safeway</Text>
-          </View>
-          <View style={styles.storeItem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.storeItem} onPress={handleFreshcoPress}>
             <Image source={freshco} style={styles.storeImage} />
-            <Text style={styles.storeName}>Fresh Co.</Text>
-          </View>
+            <Text style={styles.storeName}>Fresh Co</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
   );
 }
 
-export default HomeScreen;
+export default Index;
 
 const styles = StyleSheet.create({
   container: {
