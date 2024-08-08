@@ -1,4 +1,3 @@
-"use client"
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
